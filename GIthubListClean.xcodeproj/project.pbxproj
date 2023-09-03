@@ -16,6 +16,13 @@
 		BBAC13CB2A9F1A060075EC8D /* GIthubListCleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13CA2A9F1A060075EC8D /* GIthubListCleanTests.swift */; };
 		BBAC13D52A9F1A060075EC8D /* GIthubListCleanUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13D42A9F1A060075EC8D /* GIthubListCleanUITests.swift */; };
 		BBAC13D72A9F1A060075EC8D /* GIthubListCleanUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13D62A9F1A060075EC8D /* GIthubListCleanUITestsLaunchTests.swift */; };
+		BBAC13E92A9F1A9A0075EC8D /* GithubPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E32A9F1A9A0075EC8D /* GithubPresenter.swift */; };
+		BBAC13EA2A9F1A9A0075EC8D /* GithubWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E42A9F1A9A0075EC8D /* GithubWorker.swift */; };
+		BBAC13EB2A9F1A9A0075EC8D /* GithubRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E52A9F1A9A0075EC8D /* GithubRouter.swift */; };
+		BBAC13EC2A9F1A9A0075EC8D /* GithubModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E62A9F1A9A0075EC8D /* GithubModels.swift */; };
+		BBAC13ED2A9F1A9A0075EC8D /* GithubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E72A9F1A9A0075EC8D /* GithubViewController.swift */; };
+		BBAC13EE2A9F1A9A0075EC8D /* GithubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E82A9F1A9A0075EC8D /* GithubInteractor.swift */; };
+		BBAC13F12AA0F1A80075EC8D /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +56,13 @@
 		BBAC13D02A9F1A060075EC8D /* GIthubListCleanUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GIthubListCleanUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBAC13D42A9F1A060075EC8D /* GIthubListCleanUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIthubListCleanUITests.swift; sourceTree = "<group>"; };
 		BBAC13D62A9F1A060075EC8D /* GIthubListCleanUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIthubListCleanUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		BBAC13E32A9F1A9A0075EC8D /* GithubPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubPresenter.swift; sourceTree = "<group>"; };
+		BBAC13E42A9F1A9A0075EC8D /* GithubWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubWorker.swift; sourceTree = "<group>"; };
+		BBAC13E52A9F1A9A0075EC8D /* GithubRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubRouter.swift; sourceTree = "<group>"; };
+		BBAC13E62A9F1A9A0075EC8D /* GithubModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubModels.swift; sourceTree = "<group>"; };
+		BBAC13E72A9F1A9A0075EC8D /* GithubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubViewController.swift; sourceTree = "<group>"; };
+		BBAC13E82A9F1A9A0075EC8D /* GithubInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubInteractor.swift; sourceTree = "<group>"; };
+		BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,13 +113,21 @@
 		BBAC13B22A9F1A030075EC8D /* GIthubListClean */ = {
 			isa = PBXGroup;
 			children = (
+				BBAC13EF2A9F1AA90075EC8D /* Scene */,
 				BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */,
 				BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */,
 				BBAC13B72A9F1A030075EC8D /* ViewController.swift */,
 				BBAC13B92A9F1A030075EC8D /* Main.storyboard */,
+				BBAC13E32A9F1A9A0075EC8D /* GithubPresenter.swift */,
+				BBAC13E42A9F1A9A0075EC8D /* GithubWorker.swift */,
+				BBAC13E52A9F1A9A0075EC8D /* GithubRouter.swift */,
+				BBAC13E62A9F1A9A0075EC8D /* GithubModels.swift */,
+				BBAC13E72A9F1A9A0075EC8D /* GithubViewController.swift */,
+				BBAC13E82A9F1A9A0075EC8D /* GithubInteractor.swift */,
 				BBAC13BC2A9F1A060075EC8D /* Assets.xcassets */,
 				BBAC13BE2A9F1A060075EC8D /* LaunchScreen.storyboard */,
 				BBAC13C12A9F1A060075EC8D /* Info.plist */,
+				BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */,
 			);
 			path = GIthubListClean;
 			sourceTree = "<group>";
@@ -125,6 +147,13 @@
 				BBAC13D62A9F1A060075EC8D /* GIthubListCleanUITestsLaunchTests.swift */,
 			);
 			path = GIthubListCleanUITests;
+			sourceTree = "<group>";
+		};
+		BBAC13EF2A9F1AA90075EC8D /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Scene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,8 +288,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				BBAC13B82A9F1A030075EC8D /* ViewController.swift in Sources */,
+				BBAC13EC2A9F1A9A0075EC8D /* GithubModels.swift in Sources */,
+				BBAC13EB2A9F1A9A0075EC8D /* GithubRouter.swift in Sources */,
 				BBAC13B42A9F1A030075EC8D /* AppDelegate.swift in Sources */,
 				BBAC13B62A9F1A030075EC8D /* SceneDelegate.swift in Sources */,
+				BBAC13EA2A9F1A9A0075EC8D /* GithubWorker.swift in Sources */,
+				BBAC13F12AA0F1A80075EC8D /* CustomTableViewCell.swift in Sources */,
+				BBAC13EE2A9F1A9A0075EC8D /* GithubInteractor.swift in Sources */,
+				BBAC13E92A9F1A9A0075EC8D /* GithubPresenter.swift in Sources */,
+				BBAC13ED2A9F1A9A0075EC8D /* GithubViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +480,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -471,6 +508,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
