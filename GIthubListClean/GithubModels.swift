@@ -22,16 +22,19 @@ enum Github
     {
         var pageNumber: Int
         var githubUser: [GitHubUser]?
+        var updateAt: Int = 0
     }
     struct Response
     {
         var dataArray: [Sunset]?
         var githubUser: [GitHubUser]?
+        var updateAt: Int = 0
     }
     struct ViewModel
     {
         var dataArray: [Sunset]?
         var githubUser: [GitHubUser]?
+        var updateAt: Int = 0
     }
   }
 }

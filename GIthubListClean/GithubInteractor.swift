@@ -17,6 +17,7 @@ protocol GithubBusinessLogic
     func doSomething(request: Github.Something.Request)
     func interactorCallApi(request: Github.Something.Request)
     func interactorGetMoreData(request: Github.Something.Request)
+    func interactorLikeUser(_ row: Int)
 }
 
 protocol GithubDataStore
@@ -61,19 +62,11 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     {
         worker = GithubWorker()
         worker?.doSomeWork() { user in
-//            print(user ?? "")
             
-//            let dataUser: [GitHubUser] = user ?? []
-//            let response = Github.Something.Response(
-//                githubUser: dataUser
-//            )
-//            self.presenter?.presentGithubUser(response: response)
-            
-            self.allUser = user!
+            self.allUser = user ?? []
             var first10Users = Array(user!.prefix(10))
-//            first10Users[3].liked = true
             let response = Github.Something.Response(
-                githubUser: first10Users
+                githubUser: Array(self.allUser.prefix(10))
             )
             self.presenter?.presentGithubUser(response: response)
         }
@@ -85,6 +78,7 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
             currentPage += 1
             var maximumDisplay = currentPage * 10
             print("current page", currentPage*10, self.allUser.count - 1)
+            
             if maximumDisplay >= self.allUser.count - 1 {
                 maximumDisplay = self.allUser.count - 1
                 print("reach maximum")
@@ -98,5 +92,14 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
             self.presenter?.presentGithubUser(response: response)
             isLoadingData = false
         }
+    }
+    
+    func interactorLikeUser(_ row: Int) {
+        allUser[row].liked = !allUser[row].liked
+//        let response = Github.Something.Response(
+//            githubUser: allUser
+//        )
+        
+        presenter?.presentRefreshTable(row)
     }
 }

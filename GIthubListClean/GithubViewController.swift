@@ -15,9 +15,13 @@ import UIKit
 protocol GithubDisplayLogic: class {
     func displaySomething(viewModel: Github.Something.ViewModel)
     func displayGithubUser(viewModel: Github.Something.ViewModel)
+    func refreshTable(_ index: Int)
 }
 
 class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDataSource, UITableViewDelegate, CustomTableViewCellDelegate {
+    
+    var data: [Sunset] = []
+    var githubUser: [GitHubUser] = []
     
     func likeButtonTapped(forCell cell: CustomTableViewCell) {
         if let indexPath = table.indexPath(for: cell) {
@@ -26,11 +30,10 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
             print("update", indexPath.row)
             // Reload the corresponding row
             table.reloadRows(at: [indexPath], with: .automatic)
+            
+            interactor?.interactorLikeUser(indexPath.row)
         }
     }
-    
-    var data: [Sunset] = []
-    var githubUser: [GitHubUser] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return githubUser.count
@@ -39,15 +42,23 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let githubUser = githubUser[indexPath.row]
         let cell = table.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        
         if let imageUrl = URL(string: githubUser.avatarUrl!) {
             cell.iconImageView.imageURLLoad(url: imageUrl)
         }
+        
+        let imageSize = CGSize(width: 20, height: 20)
+        if githubUser.liked {
+            let likedImage = UIImage(named: "likedButton")?.resize(targetSize: imageSize)
+            cell.likeButton.setImage(likedImage, for: .normal)
+        } else {
+            let likeImage = UIImage(named: "likeButton")?.resize(targetSize: imageSize)
+            cell.likeButton.setImage(likeImage, for: .normal)
+        }
+        
         cell.label.text = githubUser.login
         cell.likeButton.setTitle("", for: .normal)
-        if githubUser.liked {
-            cell.likeButton.setImage(UIImage(named: "likedButton"), for: .normal)
-            
-        }
+        cell.likeButton.frame.size = CGSize(width: 20, height: 20)
         cell.githubURL.text = githubUser.url
         
         cell.delegate = self
@@ -75,66 +86,58 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
     @IBOutlet weak var table: UITableView!
     var interactor: GithubBusinessLogic?
     var router: (NSObjectProtocol & GithubRoutingLogic & GithubDataPassing)?
-    
     var currentPage = 1
     var isLoadingData = false
     
     // MARK: Object lifecycle
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
-  {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    setup()
-  }
-  
-  required init?(coder aDecoder: NSCoder)
-  {
-    super.init(coder: aDecoder)
-    setup()
-  }
-  
-  // MARK: Setup
-  
-  private func setup()
-  {
-    let viewController = self
-    let interactor = GithubInteractor()
-    let presenter = GithubPresenter()
-    let router = GithubRouter()
-    viewController.interactor = interactor
-    viewController.router = router
-    interactor.presenter = presenter
-    presenter.viewController = viewController
-    router.viewController = viewController
-    router.dataStore = interactor
-  }
-  
-  // MARK: Routing
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-  {
-    if let scene = segue.identifier {
-      let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-      if let router = router, router.responds(to: selector) {
-        router.perform(selector, with: segue)
-      }
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
     }
-  }
-  
-  // MARK: View lifecycle
-  
-  override func viewDidLoad()
-  {
-    super.viewDidLoad()
-      table.dataSource = self
-      table.delegate = self
-      doSomething()
-      startCallGithubUser()
-  }
     
-  // MARK: Do something
-  
-  //@IBOutlet weak var nameTextField: UITextField!
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    // MARK: Setup
+    
+    private func setup() {
+        let viewController = self
+        let interactor = GithubInteractor()
+        let presenter = GithubPresenter()
+        let router = GithubRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
+    }
+    
+    // MARK: Routing
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let scene = segue.identifier {
+            let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
+            if let router = router, router.responds(to: selector) {
+                router.perform(selector, with: segue)
+            }
+        }
+    }
+    
+    // MARK: View lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        table.dataSource = self
+        table.delegate = self
+        doSomething()
+        startCallGithubUser()
+    }
+    
+    // MARK: To Interactor
     
     func doSomething()
     {
@@ -147,8 +150,14 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
         interactor?.interactorCallApi(request: request)
     }
     
-    func displaySomething(viewModel: Github.Something.ViewModel)
-    {
+    func loadMoreData(forPage: Int) {
+        let currentPage = Github.Something.Request(pageNumber: forPage)
+        interactor?.interactorGetMoreData(request: currentPage)
+    }
+    
+    // MARK: From Presenter
+    
+    func displaySomething(viewModel: Github.Something.ViewModel) {
         //nameTextField.text = viewModel.name
         data = viewModel.dataArray ?? []
         print(data)
@@ -164,13 +173,17 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
         }
         self.isLoadingData = false
     }
-    
-    func loadMoreData(forPage: Int) {
-        let currentPage = Github.Something.Request(pageNumber: forPage)
-        interactor?.interactorGetMoreData(request: currentPage)
+    func refreshTable(_ indexPath: IndexPath, cell: CustomTableViewCell, viewModel: Github.Something.ViewModel) {
+        if let indexPath = table.indexPath(for: cell) {
+            table.reloadRows(at: [indexPath], with: .automatic)
+        }
     }
     
-    
+    func refreshTable(_ index: Int) {
+        let indexPath = IndexPath(row: index, section: 0)
+        table.reloadRows(at: [indexPath], with: .automatic)
+        print("udpate at", index)
+    }
 }
 
 let imageCache = NSCache<NSString, UIImage>()
@@ -197,6 +210,31 @@ extension UIImageView {
                 setImage(image: nil)
             }
         }
+    }
+}
+
+extension UIImage {
+    func resize(targetSize: CGSize) -> UIImage {
+        let size = self.size
+
+        let widthRatio = targetSize.width / size.width
+        let heightRatio = targetSize.height / size.height
+
+        var newSize: CGSize
+        if widthRatio > heightRatio {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
+        }
+
+        let rect = CGRect(origin: .zero, size: newSize)
+
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        self.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return newImage ?? UIImage()
     }
 }
 
