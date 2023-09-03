@@ -15,7 +15,7 @@ import UIKit
 protocol GithubDisplayLogic: class {
     func displaySomething(viewModel: Github.Something.ViewModel)
     func displayGithubUser(viewModel: Github.Something.ViewModel)
-    func refreshTable(_ index: Int)
+    func refreshTable(viewModel: Github.Something.ViewModel)
 }
 
 class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDataSource, UITableViewDelegate, CustomTableViewCellDelegate {
@@ -25,13 +25,14 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
     
     func likeButtonTapped(forCell cell: CustomTableViewCell) {
         if let indexPath = table.indexPath(for: cell) {
-            // Update the githubUser item
             githubUser[indexPath.row].liked = !githubUser[indexPath.row].liked
             print("update", indexPath.row)
-            // Reload the corresponding row
-            table.reloadRows(at: [indexPath], with: .automatic)
             
-            interactor?.interactorLikeUser(indexPath.row)
+            let request = Github.Something.Request(
+                pageNumber: currentPage, updateAt: indexPath.row
+            )
+            
+            interactor?.interactorLikeUser(request: request)
         }
     }
     
@@ -133,17 +134,10 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
         super.viewDidLoad()
         table.dataSource = self
         table.delegate = self
-        doSomething()
         startCallGithubUser()
     }
     
     // MARK: To Interactor
-    
-    func doSomething()
-    {
-        let request = Github.Something.Request(pageNumber: currentPage)
-        interactor?.doSomething(request: request)
-    }
     
     func startCallGithubUser() {
         let request = Github.Something.Request(pageNumber: currentPage)
@@ -173,13 +167,9 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
         }
         self.isLoadingData = false
     }
-    func refreshTable(_ indexPath: IndexPath, cell: CustomTableViewCell, viewModel: Github.Something.ViewModel) {
-        if let indexPath = table.indexPath(for: cell) {
-            table.reloadRows(at: [indexPath], with: .automatic)
-        }
-    }
     
-    func refreshTable(_ index: Int) {
+    func refreshTable(viewModel: Github.Something.ViewModel) {
+        let index = viewModel.updateAt
         let indexPath = IndexPath(row: index, section: 0)
         table.reloadRows(at: [indexPath], with: .automatic)
         print("udpate at", index)

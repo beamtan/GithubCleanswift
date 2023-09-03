@@ -12,12 +12,10 @@
 
 import UIKit
 
-protocol GithubBusinessLogic
-{
-    func doSomething(request: Github.Something.Request)
+protocol GithubBusinessLogic {
     func interactorCallApi(request: Github.Something.Request)
     func interactorGetMoreData(request: Github.Something.Request)
-    func interactorLikeUser(_ row: Int)
+    func interactorLikeUser(request: Github.Something.Request)
 }
 
 protocol GithubDataStore
@@ -37,26 +35,6 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     var currentPage: Int = 1
   
   // MARK: Do something
-    
-    func doSomething(request: Github.Something.Request)
-    {
-        worker = GithubWorker()
-        worker?.doSomeWork() { user in
-            print(user ?? "")
-            let dataArray: [Sunset] = [Sunset(title: "one", imageName: "one"),
-                                       Sunset(title: "two", imageName: "two"),
-                                       Sunset(title: "three", imageName: "three"),
-                                       Sunset(title: "four", imageName: "four"),
-                                       Sunset(title: "five", imageName: "five")]
-            
-            let response = Github.Something.Response(
-                dataArray: dataArray
-            )
-            self.presenter?.presentSomething(response: response)
-        }
-        
-        
-    }
     
     func interactorCallApi(request: Github.Something.Request)
     {
@@ -94,12 +72,14 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
         }
     }
     
-    func interactorLikeUser(_ row: Int) {
+    func interactorLikeUser(request: Github.Something.Request) {
+        let row = request.updateAt
         allUser[row].liked = !allUser[row].liked
-//        let response = Github.Something.Response(
-//            githubUser: allUser
-//        )
+        let response = Github.Something.Response(
+            githubUser: allUser,
+            updateAt: row
+        )
         
-        presenter?.presentRefreshTable(row)
+        presenter?.presentRefreshTable(response: response)
     }
 }

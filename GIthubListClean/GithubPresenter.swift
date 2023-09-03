@@ -16,7 +16,7 @@ protocol GithubPresentationLogic
 {
   func presentSomething(response: Github.Something.Response)
     func presentGithubUser(response: Github.Something.Response)
-    func presentRefreshTable(_ row: Int)
+    func presentRefreshTable(response: Github.Something.Response)
 }
 
 class GithubPresenter: GithubPresentationLogic {
@@ -41,12 +41,13 @@ class GithubPresenter: GithubPresentationLogic {
         viewController?.displayGithubUser(viewModel: viewModel)
     }
     
-    func presentRefreshTable(_ row: Int) {
-//        let data = response.githubUser
-//        let viewModel = Github.Something.ViewModel(
-//            githubUser: self.all,
-//            updateAt: row
-//        )
-        viewController?.refreshTable(row)
+    func presentRefreshTable(response: Github.Something.Response) {
+        
+        let data = response.githubUser
+        let viewModel = Github.Something.ViewModel(
+            githubUser: data,
+            updateAt: response.updateAt
+        )
+        viewController?.refreshTable(viewModel: viewModel)
     }
 }
