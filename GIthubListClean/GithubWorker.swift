@@ -15,7 +15,7 @@ import UIKit
 //https://api.github.com/users
 
 class GithubWorker {
-    func doSomeWork(completionHandler: @escaping ([GitHubUser]?) -> Void) {
+    func getGithubUserData(completionHandler: @escaping ([GitHubUser]?, Error?) -> Void) {
         // Make an API call
         let url = URL(string: "https://api.github.com/users")!
         let request = URLRequest(url: url)
@@ -24,9 +24,9 @@ class GithubWorker {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                 let users = try? JSONDecoder().decode([GitHubUser].self, from: data)
-                completionHandler(users)
+                completionHandler(users, nil)
             } else {
-                completionHandler(nil)
+                completionHandler(nil, error)
             }
         }.resume()
     }

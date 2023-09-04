@@ -43,7 +43,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y24-W0-fRw">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y24-W0-fRw">
                                                     <rect key="frame" x="170" y="40.333333333333336" width="202" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="2My-FE-sCg"/>
@@ -52,13 +52,10 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aVP-y5-rB6">
-                                                    <rect key="frame" x="349" y="83" width="20" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aVP-y5-rB6">
+                                                    <rect key="frame" x="339" y="90" width="24" height="14"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain">
-                                                        <backgroundConfiguration key="background" image="heart" catalog="system" imageContentMode="scaleAspectFit"/>
-                                                    </buttonConfiguration>
+                                                    <buttonConfiguration key="configuration" style="plain"/>
                                                     <connections>
                                                         <action selector="likeButtonTapped:" destination="1e4-wi-KhU" eventType="touchUpInside" id="alu-Bd-h9L"/>
                                                     </connections>
@@ -72,8 +69,10 @@
                                                 <constraint firstAttribute="trailing" secondItem="knW-1q-OZc" secondAttribute="trailing" constant="10" id="Zso-S7-ijg"/>
                                                 <constraint firstItem="y24-W0-fRw" firstAttribute="leading" secondItem="TNb-EZ-b12" secondAttribute="trailing" constant="10" id="gH5-I4-NTQ"/>
                                                 <constraint firstItem="TNb-EZ-b12" firstAttribute="top" secondItem="o8B-2K-InT" secondAttribute="top" constant="10" id="hyL-fR-maf"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="aVP-y5-rB6" secondAttribute="bottom" id="j5J-tE-08O"/>
                                                 <constraint firstItem="knW-1q-OZc" firstAttribute="top" secondItem="o8B-2K-InT" secondAttribute="top" constant="10" id="nsJ-3Q-UrP"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="y24-W0-fRw" secondAttribute="trailing" constant="1" id="u9z-9G-4AO"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="aVP-y5-rB6" secondAttribute="trailing" constant="10" id="xIJ-7C-HsZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -96,6 +95,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="mainView" destination="8bC-Xf-vdC" id="3nS-ar-MD8"/>
                         <outlet property="table" destination="1h5-yd-4dp" id="7nI-ce-ZWg"/>
                     </connections>
                 </viewController>
@@ -105,7 +105,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="heart" catalog="system" width="128" height="107"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

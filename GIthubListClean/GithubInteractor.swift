@@ -13,70 +13,82 @@
 import UIKit
 
 protocol GithubBusinessLogic {
-    func interactorCallApi(request: Github.Something.Request)
-    func interactorGetMoreData(request: Github.Something.Request)
-    func interactorLikeUser(request: Github.Something.Request)
+    func interactorCallApi()
+    func interactorGetMoreData(request: Github.UserPage.Request)
+    func interactorLikeUser(request: Github.UserIsLiked.Request)
 }
 
-protocol GithubDataStore
-{
-  //var name: String { get set }
+protocol GithubDataStore {
+    //var name: String { get set }
 }
 
 class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     
-  var presenter: GithubPresentationLogic?
-  var worker: GithubWorker?
-  //var name: String = ""
+    var presenter: GithubPresentationLogic?
+    var worker: GithubWorker?
     
-    var allUser: [GitHubUser] = []
+    private var allUser: [GitHubUser] = []
+    private var isLoadingData: Bool = false
+    private var currentPage: Int = 1
     
-    var isLoadingData: Bool = false
-    var currentPage: Int = 1
-  
-  // MARK: Do something
+    // MARK: Do something
     
-    func interactorCallApi(request: Github.Something.Request)
-    {
+    func interactorCallApi() {
         worker = GithubWorker()
-        worker?.doSomeWork() { user in
+        worker?.getGithubUserData() { [weak self] user, error  in
             
-            self.allUser = user ?? []
-            var first10Users = Array(user!.prefix(10))
-            let response = Github.Something.Response(
-                githubUser: Array(self.allUser.prefix(10))
-            )
-            self.presenter?.presentGithubUser(response: response)
+            var response: Github.UserDetail.Response
+            if let allUser = user {
+                self?.allUser = allUser
+                response = Github.UserDetail.Response(
+                    githubUser: Array(self?.allUser.prefix(10) ?? []),
+                    isError: false,
+                    errorMessage: ""
+                )
+                self?.presenter?.presentGithubUser(response: response)
+            } else {
+                response = Github.UserDetail.Response(
+                    githubUser: [],
+                    isError: true,
+                    errorMessage: error!.localizedDescription
+                )
+                self?.presenter?.presentError(response: response)
+            }
         }
     }
     
-    func interactorGetMoreData(request: Github.Something.Request) {
+    func interactorGetMoreData(request: Github.UserPage.Request) {
+        
+        let totalUser: Int = self.allUser.count - 1
+        
         if !isLoadingData {
             isLoadingData = true
             currentPage += 1
-            var maximumDisplay = currentPage * 10
-            print("current page", currentPage*10, self.allUser.count - 1)
             
-            if maximumDisplay >= self.allUser.count - 1 {
-                maximumDisplay = self.allUser.count - 1
+            var maximumDisplayCurrentPage = currentPage * 10
+            
+            if maximumDisplayCurrentPage >= totalUser {
+                maximumDisplayCurrentPage = totalUser
                 print("reach maximum")
                 return
             }
             
-            let presentUser = Array(self.allUser.prefix(maximumDisplay))
-            let response = Github.Something.Response(
-                githubUser: presentUser
+            let presentUser = Array(self.allUser.prefix(maximumDisplayCurrentPage))
+            let response = Github.UserDetail.Response(
+                githubUser: presentUser,
+                isError: false,
+                errorMessage: ""
             )
+            
             self.presenter?.presentGithubUser(response: response)
             isLoadingData = false
         }
     }
     
-    func interactorLikeUser(request: Github.Something.Request) {
+    func interactorLikeUser(request: Github.UserIsLiked.Request) {
         let row = request.updateAt
-        allUser[row].liked = !allUser[row].liked
-        let response = Github.Something.Response(
-            githubUser: allUser,
+        allUser[row].isLiked = !allUser[row].isLiked
+        let response = Github.UserIsLiked.Response(
             updateAt: row
         )
         

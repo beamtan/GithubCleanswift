@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		BBAC13B42A9F1A030075EC8D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */; };
 		BBAC13B62A9F1A030075EC8D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */; };
-		BBAC13B82A9F1A030075EC8D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13B72A9F1A030075EC8D /* ViewController.swift */; };
 		BBAC13BB2A9F1A030075EC8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBAC13B92A9F1A030075EC8D /* Main.storyboard */; };
 		BBAC13BD2A9F1A060075EC8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BBAC13BC2A9F1A060075EC8D /* Assets.xcassets */; };
 		BBAC13C02A9F1A060075EC8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBAC13BE2A9F1A060075EC8D /* LaunchScreen.storyboard */; };
@@ -46,7 +45,6 @@
 		BBAC13B02A9F1A030075EC8D /* GIthubListClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GIthubListClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BBAC13B72A9F1A030075EC8D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BBAC13BA2A9F1A030075EC8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BBAC13BC2A9F1A060075EC8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BBAC13BF2A9F1A060075EC8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 				BBAC13EF2A9F1AA90075EC8D /* Scene */,
 				BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */,
 				BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */,
-				BBAC13B72A9F1A030075EC8D /* ViewController.swift */,
 				BBAC13B92A9F1A030075EC8D /* Main.storyboard */,
 				BBAC13E32A9F1A9A0075EC8D /* GithubPresenter.swift */,
 				BBAC13E42A9F1A9A0075EC8D /* GithubWorker.swift */,
@@ -287,7 +284,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBAC13B82A9F1A030075EC8D /* ViewController.swift in Sources */,
 				BBAC13EC2A9F1A9A0075EC8D /* GithubModels.swift in Sources */,
 				BBAC13EB2A9F1A9A0075EC8D /* GithubRouter.swift in Sources */,
 				BBAC13B42A9F1A030075EC8D /* AppDelegate.swift in Sources */,

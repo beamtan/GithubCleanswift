@@ -13,82 +13,21 @@
 import UIKit
 
 protocol GithubDisplayLogic: class {
-    func displaySomething(viewModel: Github.Something.ViewModel)
-    func displayGithubUser(viewModel: Github.Something.ViewModel)
-    func refreshTable(viewModel: Github.Something.ViewModel)
+    func displayGithubUser(viewModel: Github.UserDetail.ViewModel)
+    func refreshTable(viewModel: Github.UserIsLiked.ViewModel)
+    func showAlert(title: String, message: String)
 }
 
-class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDataSource, UITableViewDelegate, CustomTableViewCellDelegate {
-    
-    var data: [Sunset] = []
-    var githubUser: [GitHubUser] = []
-    
-    func likeButtonTapped(forCell cell: CustomTableViewCell) {
-        if let indexPath = table.indexPath(for: cell) {
-            githubUser[indexPath.row].liked = !githubUser[indexPath.row].liked
-            print("update", indexPath.row)
-            
-            let request = Github.Something.Request(
-                pageNumber: currentPage, updateAt: indexPath.row
-            )
-            
-            interactor?.interactorLikeUser(request: request)
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return githubUser.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let githubUser = githubUser[indexPath.row]
-        let cell = table.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-        
-        if let imageUrl = URL(string: githubUser.avatarUrl!) {
-            cell.iconImageView.imageURLLoad(url: imageUrl)
-        }
-        
-        let imageSize = CGSize(width: 20, height: 20)
-        if githubUser.liked {
-            let likedImage = UIImage(named: "likedButton")?.resize(targetSize: imageSize)
-            cell.likeButton.setImage(likedImage, for: .normal)
-        } else {
-            let likeImage = UIImage(named: "likeButton")?.resize(targetSize: imageSize)
-            cell.likeButton.setImage(likeImage, for: .normal)
-        }
-        
-        cell.label.text = githubUser.login
-        cell.likeButton.setTitle("", for: .normal)
-        cell.likeButton.frame.size = CGSize(width: 20, height: 20)
-        cell.githubURL.text = githubUser.url
-        
-        cell.delegate = self
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 140
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // Get the visible indexPaths
-        let lastElement = githubUser.count - 1
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let screenHeight = scrollView.frame.size.height
-        
-        if offsetY > contentHeight - screenHeight {
-            if !isLoadingData && (currentPage < githubUser.count - 1) {
-                loadMoreData(forPage: currentPage)
-            }
-        }
-    }
-    
-    @IBOutlet weak var table: UITableView!
+class GithubViewController: UIViewController, GithubDisplayLogic {
     var interactor: GithubBusinessLogic?
     var router: (NSObjectProtocol & GithubRoutingLogic & GithubDataPassing)?
-    var currentPage = 1
-    var isLoadingData = false
+
+    @IBOutlet private weak var table: UITableView!
+    @IBOutlet private weak var mainView: UIView!
+    
+    private var githubUser: [GitHubUser] = []
+    private var currentPage = 1
+    private var isLoadingData = false
     
     // MARK: Object lifecycle
     
@@ -134,33 +73,23 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
         super.viewDidLoad()
         table.dataSource = self
         table.delegate = self
-        startCallGithubUser()
+        initFetchGithubData()
     }
     
     // MARK: To Interactor
     
-    func startCallGithubUser() {
-        let request = Github.Something.Request(pageNumber: currentPage)
-        interactor?.interactorCallApi(request: request)
+    func initFetchGithubData() {
+        interactor?.interactorCallApi()
     }
     
     func loadMoreData(forPage: Int) {
-        let currentPage = Github.Something.Request(pageNumber: forPage)
+        let currentPage = Github.UserPage.Request(pageNumber: forPage)
         interactor?.interactorGetMoreData(request: currentPage)
     }
     
     // MARK: From Presenter
     
-    func displaySomething(viewModel: Github.Something.ViewModel) {
-        //nameTextField.text = viewModel.name
-        data = viewModel.dataArray ?? []
-        print(data)
-        DispatchQueue.main.async {
-            self.table.reloadData()
-        }
-    }
-    
-    func displayGithubUser(viewModel: Github.Something.ViewModel) {
+    func displayGithubUser(viewModel: Github.UserDetail.ViewModel) {
         githubUser = viewModel.githubUser ?? []
         DispatchQueue.main.async {
             self.table.reloadData()
@@ -168,20 +97,113 @@ class GithubViewController: UIViewController, GithubDisplayLogic, UITableViewDat
         self.isLoadingData = false
     }
     
-    func refreshTable(viewModel: Github.Something.ViewModel) {
+    func refreshTable(viewModel: Github.UserIsLiked.ViewModel) {
         let index = viewModel.updateAt
         let indexPath = IndexPath(row: index, section: 0)
         table.reloadRows(at: [indexPath], with: .automatic)
-        print("udpate at", index)
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        DispatchQueue.main.async {
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
 }
 
-let imageCache = NSCache<NSString, UIImage>()
+// MARK: - GithubDisplayLogic
+
+extension GithubViewController: UITableViewDataSource, UITableViewDelegate, CustomTableViewCellDelegate {
+    
+    func likeButtonTapped(forCell cell: CustomTableViewCell) {
+        if let indexPath = table.indexPath(for: cell) {
+            githubUser[indexPath.row].isLiked = !githubUser[indexPath.row].isLiked
+            
+            let request = Github.UserIsLiked.Request(
+                updateAt: indexPath.row
+            )
+            
+            interactor?.interactorLikeUser(request: request)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return githubUser.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let githubUser = githubUser[indexPath.row]
+        let cell = table.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        
+        setupURLFrame(cell: cell)
+        setUpTableUI(cell: cell, githubUser: githubUser)
+
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 140
+    }
+    
+    private func setupURLFrame(cell: CustomTableViewCell) {
+        cell.githubURL.numberOfLines = 0
+        cell.githubURL.lineBreakMode = .byWordWrapping
+        
+        let maxSize = CGSize(width: 200.0, height: CGFloat.greatestFiniteMagnitude)
+        let requiredSize = cell.githubURL.sizeThatFits(maxSize)
+        
+        cell.githubURL.frame = CGRect(
+            x: cell.githubURL.frame.origin.x,
+            y: cell.githubURL.frame.origin.y,
+            width: requiredSize.width,
+            height: requiredSize.height
+        )
+    }
+    
+    private func setUpTableUI(cell: CustomTableViewCell, githubUser: GitHubUser) {
+        cell.label.text = githubUser.login
+        cell.likeButton.setTitle("", for: .normal)
+        cell.likeButton.frame.size = CGSize(width: 20, height: 20)
+        cell.githubURL.text = githubUser.url
+        cell.delegate = self
+        
+        
+        
+        if let imageUrl = URL(string: githubUser.avatarUrl!) {
+            cell.iconImageView.imageURLLoad(url: imageUrl)
+        }
+        
+        let imageSize = CGSize(width: 20, height: 20)
+        if githubUser.isLiked {
+            let likedImage = UIImage(named: "likedButton")?.resize(targetSize: imageSize)
+            cell.likeButton.setImage(likedImage, for: .normal)
+        } else {
+            let likeImage = UIImage(named: "likeButton")?.resize(targetSize: imageSize)
+            cell.likeButton.setImage(likeImage, for: .normal)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let screenHeight = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - screenHeight {
+            if !isLoadingData {
+                loadMoreData(forPage: currentPage)
+            }
+        }
+    }
+}
 
 extension UIImageView {
-
     func imageURLLoad(url: URL) {
-
         DispatchQueue.global().async { [weak self] in
             func setImage(image:UIImage?) {
                 DispatchQueue.main.async {
@@ -189,11 +211,11 @@ extension UIImageView {
                 }
             }
             let urlToString = url.absoluteString as NSString
-            if let cachedImage = imageCache.object(forKey: urlToString) {
+            if let cachedImage = NSCache<NSString, UIImage>().object(forKey: urlToString) {
                 setImage(image: cachedImage)
             } else if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
                 DispatchQueue.main.async {
-                    imageCache.setObject(image, forKey: urlToString)
+                    NSCache<NSString, UIImage>().setObject(image, forKey: urlToString)
                     setImage(image: image)
                 }
             }else {

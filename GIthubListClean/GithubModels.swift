@@ -12,36 +12,43 @@
 
 import UIKit
 
-enum Github
-{
-  // MARK: Use cases
-  
-  enum Something
-  {
-    struct Request
-    {
-        var pageNumber: Int
-        var githubUser: [GitHubUser]?
-        var updateAt: Int = 0
+enum Github {
+    enum UserDetail {
+        struct Request {}
+        struct Response {
+            let githubUser: [GitHubUser]?
+            let isError: Bool
+            let errorMessage: String
+        }
+        struct ViewModel {
+            let githubUser: [GitHubUser]?
+        }
     }
-    struct Response
-    {
-        var dataArray: [Sunset]?
-        var githubUser: [GitHubUser]?
-        var updateAt: Int = 0
+    
+    enum UserPage {
+        struct Request {
+            let pageNumber: Int
+        }
+        struct Response {
+            let pageNumber: Int
+        }
+        struct ViewModel {
+            let pageNumber: Int
+        }
     }
-    struct ViewModel
-    {
-        var dataArray: [Sunset]?
-        var githubUser: [GitHubUser]?
-        var updateAt: Int = 0
+    
+    enum UserIsLiked {
+        struct Request {
+            let updateAt: Int
+        }
+        struct Response {
+            let updateAt: Int
+        }
+        struct ViewModel {
+            let updateAt: Int
+        }
     }
-  }
-}
-
-struct Sunset: Codable {
-    let title: String
-    let imageName: String
+    
 }
 
 struct GitHubUser: Codable {
@@ -63,7 +70,7 @@ struct GitHubUser: Codable {
     var receivedEventsUrl: String?
     var type: String?
     var siteAdmin: Bool?
-    var liked: Bool = false
+    var isLiked: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case login = "login"

@@ -12,42 +12,32 @@
 
 import UIKit
 
-protocol GithubPresentationLogic
-{
-  func presentSomething(response: Github.Something.Response)
-    func presentGithubUser(response: Github.Something.Response)
-    func presentRefreshTable(response: Github.Something.Response)
+protocol GithubPresentationLogic {
+    func presentGithubUser(response: Github.UserDetail.Response)
+    func presentRefreshTable(response: Github.UserIsLiked.Response)
+    func presentError(response: Github.UserDetail.Response)
 }
 
 class GithubPresenter: GithubPresentationLogic {
     
     weak var viewController: GithubDisplayLogic?
     
-  // MARK: Do something
-  
-  func presentSomething(response: Github.Something.Response) {
-      let data = response.dataArray
-      let viewModel = Github.Something.ViewModel(
-        dataArray: data
-      )
-    viewController?.displaySomething(viewModel: viewModel)
-  }
-    
-    func presentGithubUser(response: Github.Something.Response) {
+    func presentGithubUser(response: Github.UserDetail.Response) {
         let data = response.githubUser
-        let viewModel = Github.Something.ViewModel(
+        let viewModel = Github.UserDetail.ViewModel(
             githubUser: data
         )
         viewController?.displayGithubUser(viewModel: viewModel)
     }
     
-    func presentRefreshTable(response: Github.Something.Response) {
-        
-        let data = response.githubUser
-        let viewModel = Github.Something.ViewModel(
-            githubUser: data,
+    func presentRefreshTable(response: Github.UserIsLiked.Response) {
+        let viewModel = Github.UserIsLiked.ViewModel(
             updateAt: response.updateAt
         )
         viewController?.refreshTable(viewModel: viewModel)
+    }
+    
+    func presentError(response: Github.UserDetail.Response) {
+        viewController?.showAlert(title: "No data", message: response.errorMessage)
     }
 }
