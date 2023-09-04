@@ -141,7 +141,7 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
         let githubUser = githubUser[indexPath.row]
         let cell = table.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         
-        setupURLFrame(cell: cell)
+        setupURLLabelFrame(cell: cell)
         setUpTableUI(cell: cell, githubUser: githubUser)
 
         return cell
@@ -151,7 +151,7 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
         return 140
     }
     
-    private func setupURLFrame(cell: CustomTableViewCell) {
+    private func setupURLLabelFrame(cell: CustomTableViewCell) {
         cell.githubURL.numberOfLines = 0
         cell.githubURL.lineBreakMode = .byWordWrapping
         
@@ -172,8 +172,6 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
         cell.likeButton.frame.size = CGSize(width: 20, height: 20)
         cell.githubURL.text = githubUser.url
         cell.delegate = self
-        
-        
         
         if let imageUrl = URL(string: githubUser.avatarUrl!) {
             cell.iconImageView.imageURLLoad(url: imageUrl)
