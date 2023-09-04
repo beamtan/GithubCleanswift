@@ -83,8 +83,8 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
     }
     
     func loadMoreData(forPage: Int) {
-        let currentPage = Github.UserPage.Request(pageNumber: forPage)
-        interactor?.interactorGetMoreData(request: currentPage)
+//        let currentPage = Github.UserPage.Request(pageNumber: forPage)
+        interactor?.interactorGetMoreData()
     }
     
     // MARK: From Presenter

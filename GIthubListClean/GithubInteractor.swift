@@ -14,7 +14,7 @@ import UIKit
 
 protocol GithubBusinessLogic {
     func interactorCallApi()
-    func interactorGetMoreData(request: Github.UserPage.Request)
+    func interactorGetMoreData()
     func interactorLikeUser(request: Github.UserIsLiked.Request)
 }
 
@@ -27,9 +27,9 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     var presenter: GithubPresentationLogic?
     var worker: GithubWorker?
     
-    private var allUser: [GitHubUser] = []
-    private var isLoadingData: Bool = false
-    private var currentPage: Int = 1
+    var allUser: [GitHubUser] = []
+    var isLoadingData: Bool = false
+    var currentPage: Int = 1
     
     // MARK: Do something
     
@@ -57,14 +57,14 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
         }
     }
     
-    func interactorGetMoreData(request: Github.UserPage.Request) {
+    func interactorGetMoreData() {
         
         let totalUser: Int = self.allUser.count - 1
         
         if !isLoadingData {
             isLoadingData = true
-            currentPage += 1
             
+            currentPage += 1
             var maximumDisplayCurrentPage = currentPage * 10
             
             if maximumDisplayCurrentPage >= totalUser {
