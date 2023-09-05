@@ -14,15 +14,23 @@ import UIKit
 
 //https://api.github.com/users
 
-class GithubWorker {
+protocol GithubWorkerProtocol {
+    func getGithubUserData(completionHandler: @escaping ([GitHubUser]?, Error?) -> Void)
+}
+
+class GithubWorker: GithubWorkerProtocol {
+    
     func getGithubUserData(completionHandler: @escaping ([GitHubUser]?, Error?) -> Void) {
         // Make an API call
-        let url = URL(string: "https://api.github.com/users")!
+        guard let url = URL(string: "https://api.github.com/users") else {
+            return
+        }
         let request = URLRequest(url: url)
-        
+
         // Send the request
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
+                print(data)
                 let users = try? JSONDecoder().decode([GitHubUser].self, from: data)
                 completionHandler(users, nil)
             } else {

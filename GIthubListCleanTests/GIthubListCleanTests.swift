@@ -35,77 +35,37 @@ final class GIthubListCleanTests: XCTestCase {
     
     var interactor: GithubInteractor!
     var presenter: MockGithubPresenter!
+    var worker: MockGithubWorker!
+    
     var allUser: [GitHubUser] = []
     var github30people: [GitHubUser] = []
+    var mockData = GitHubMockDataGenerator()
     
     override func setUp() {
         super.setUp()
         interactor = GithubInteractor()
         presenter = MockGithubPresenter()
+        worker = MockGithubWorker()
+        
         interactor.presenter = presenter
-        setUpGitHubMockData()
-    }
-    
-    func setUpGitHubMockData() {
-        allUser = [
-            GitHubUser(
-                login: "mojombo",
-                id: 1,
-                nodeId: "MDQ6VXNlcjE=",
-                avatarUrl: "https://avatars.githubusercontent.com/u/1?v=4",
-                gravatarId: "",
-                url: "https://api.github.com/users/mojombo",
-                htmlUrl: "https://github.com/mojombo",
-                followersUrl: "https://api.github.com/users/mojombo/followers",
-                followingUrl: "https://api.github.com/users/mojombo/following{/other_user}",
-                gistsUrl: "https://api.github.com/users/mojombo/gists{/gist_id}",
-                starredUrl: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",                subscriptionsUrl: "https://api.github.com/users/mojombo/subscriptions",
-                organizationsUrl: "https://api.github.com/users/mojombo/orgs",
-                reposUrl: "https://api.github.com/users/mojombo/repos",
-                eventsUrl: "https://api.github.com/users/mojombo/events{/privacy}",
-                receivedEventsUrl: "https://api.github.com/users/mojombo/received_events",
-                type: "User",
-                siteAdmin: false,
-                isLiked: false
-            ),
-            GitHubUser(
-                login: "mojombo2",
-                id: 2,
-                nodeId: "MDQ6VXNlcjE=",
-                avatarUrl: "https://avatars.githubusercontent.com/u/1?v=4",
-                gravatarId: "",
-                url: "https://api.github.com/users/mojombo",
-                htmlUrl: "https://github.com/mojombo",
-                followersUrl: "https://api.github.com/users/mojombo/followers",
-                followingUrl: "https://api.github.com/users/mojombo/following{/other_user}",
-                gistsUrl: "https://api.github.com/users/mojombo/gists{/gist_id}",
-                starredUrl: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",                subscriptionsUrl: "https://api.github.com/users/mojombo/subscriptions",
-                organizationsUrl: "https://api.github.com/users/mojombo/orgs",
-                reposUrl: "https://api.github.com/users/mojombo/repos",
-                eventsUrl: "https://api.github.com/users/mojombo/events{/privacy}",
-                receivedEventsUrl: "https://api.github.com/users/mojombo/received_events",
-                type: "User",
-                siteAdmin: false,
-                isLiked: false
-            )
-        ]
-        for _ in 0...30 {
-            github30people.append(allUser[0])
-        }
+        interactor.worker = worker
+        
+        mockData.setUpGitHubMockData()
     }
     
     override func tearDown() {
         interactor = nil
         presenter = nil
+        worker = nil
         super.tearDown()
     }
     
     
-    func testInteractorLikeUserUnlikedToLiked() {
+    func testInteractorLikeUser() {
         // Given
         let row = 0 // Index of the user to be toggled from unliked to liked
         let request = Github.UserIsLiked.Request(updateAt: row)
-        interactor.allUser = self.allUser
+        interactor.allUser = self.mockData.allUser
         
         // When
         interactor.interactorLikeUser(request: request)
@@ -116,31 +76,26 @@ final class GIthubListCleanTests: XCTestCase {
         XCTAssertTrue(interactor.allUser[row].isLiked)
     }
     
-//    func testInteractorGetMoreDataWithValidPage() {
-//        // Given
-//        interactor.currentPage = 1 // Set the current page
-//        interactor.isLoadingData = false // Set isLoadingData to false
-//        let totalUser = allUser.count - 1
-//
-//        // When
-//        interactor.interactorGetMoreData()
-//
-//        // Then
-//        XCTAssertTrue(presenter.presentGithubUserCalled)
-//        XCTAssertFalse(interactor.isLoadingData)
-//        XCTAssertEqual(interactor.currentPage, 2) // Check if currentPage is incremented
-//        // Add more assertions based on your logic
-//    }
-
-    func testInteractorGetMoreData() {
+    func testInteractorGetMoreDataWithValidPage() {
         // Given
         interactor.currentPage = 1 // Set the current page
         interactor.isLoadingData = false // Set isLoadingData to false
-        interactor.allUser = self.github30people
-        
-        // Set maximumDisplayCurrentPage such that it reaches the maximum
-        let maximumDisplayCurrentPage = self.github30people.count - 1
-        let presentUser = Array(self.github30people.prefix(maximumDisplayCurrentPage))
+        interactor.allUser = self.mockData.github30people
+
+        // When
+        interactor.interactorGetMoreData()
+
+        // Then
+        XCTAssertTrue(presenter.presentGithubUserCalled)
+        XCTAssertEqual(interactor.currentPage, 2) // Check if currentPage is incremented
+        // Add more assertions based on your logic
+    }
+
+    func testInteractorGetMoreData() {
+        // Given
+        interactor.currentPage = 1
+        interactor.isLoadingData = false
+        interactor.allUser = self.mockData.github30people
 
         // When
         interactor.interactorGetMoreData()
@@ -153,23 +108,78 @@ final class GIthubListCleanTests: XCTestCase {
     
     func testInteractorGetMoreDataWithMaximumPage() {
         // Given
-        interactor.currentPage = 4 // Set the current page
-        interactor.isLoadingData = false // Set isLoadingData to false
-        interactor.allUser = self.github30people
         
         // Set maximumDisplayCurrentPage such that it reaches the maximum
-        let maximumDisplayCurrentPage = self.github30people.count - 1
-
+        interactor.currentPage = 4
+        
+        interactor.isLoadingData = false
+        interactor.allUser = self.mockData.github30people
+        
         // When
         interactor.interactorGetMoreData()
 
         // Then
         XCTAssertFalse(presenter.presentGithubUserCalled)
-
-//        XCTAssertFalse(interactor.isLoadingData)
-//        XCTAssertEqual(interactor.currentPage, ) // Check if currentPage remains the same
-//        XCTAssertEqual(maximumDisplayCurrentPage, totalUser)
-        // Add more assertions based on your logic
+    }
+    
+    func testInteractorCallApi() {
+        // Create an expectation
+        let expectation = self.expectation(description: "API call completed")
+        
+        // Create a mock worker that returns mock data immediately
+        worker.getGithubUserData { _, _ in
+            // Fulfill the expectation when the API call completes
+            expectation.fulfill()
+        }
+        
+        
+        // Trigger the interactor method that makes the API call
+        interactor.interactorCallApi()
+        
+        // Wait for the expectation to be fulfilled or timeout after a certain duration
+        waitForExpectations(timeout: 3) { [self] error in
+            if let error = error {
+                XCTFail("Test timed out: \(error)")
+            } else {
+                // Your assertions here
+                XCTAssertFalse(presenter.presentGithubUserCalled)
+            }
+        }
+    }
+    
+    func testWorkerCallAPI() {
+        // Arrange
+        let expectation = self.expectation(description: "API call completed")
+        let mockData = self.mockData.github30people // Replace with your mock data
+        
+        worker.mockData = mockData
+        
+        // Act
+        worker.getGithubUserData { users, error in
+            // Assert
+            XCTAssertNil(error)
+            XCTAssertNotNil(users)
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3, handler: nil)
+    }
+    
+    func testGetGithubUserDataFailure() {
+        // Arrange
+        let expectation = self.expectation(description: "API call completed")
+        let mockError = NSError(domain: "MockErrorDomain", code: 123, userInfo: nil)
+        worker.mockError = mockError
+        
+        // Act
+        worker.getGithubUserData { users, error in
+            // Assert
+            XCTAssertNotNil(error)
+            XCTAssertNil(users)
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3, handler: nil)
     }
 }
 
@@ -189,9 +199,75 @@ class MockGithubPresenter: GithubPresentationLogic {
     func presentError(response: GIthubListClean.Github.UserDetail.Response) {
         presentErrorCalled = true
     }
-
+    
     func presentRefreshTable(response: Github.UserIsLiked.Response) {
         presentRefreshTableCalled = true
         refreshTableViewModel = Github.UserIsLiked.ViewModel(updateAt: response.updateAt)
+    }
+}
+
+class MockGithubWorker: GithubWorkerProtocol {
+    var mockData: [GitHubUser]?
+    var mockError: Error?
+    
+    func getGithubUserData(completionHandler: @escaping ([GIthubListClean.GitHubUser]?, Error?) -> Void) {
+        completionHandler(mockData, mockError)
+    }
+}
+
+class GitHubMockDataGenerator {
+    var allUser: [GitHubUser] = []
+    var github30people: [GitHubUser] = []
+    
+    func setUpGitHubMockData() {
+        let githubUser1 = GitHubUser(
+            login: "mojombo",
+            id: 1,
+            nodeId: "MDQ6VXNlcjE=",
+            avatarUrl: "https://avatars.githubusercontent.com/u/1?v=4",
+            gravatarId: "",
+            url: "https://api.github.com/users/mojombo",
+            htmlUrl: "https://github.com/mojombo",
+            followersUrl: "https://api.github.com/users/mojombo/followers",
+            followingUrl: "https://api.github.com/users/mojombo/following{/other_user}",
+            gistsUrl: "https://api.github.com/users/mojombo/gists{/gist_id}",
+            starredUrl: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",
+            subscriptionsUrl: "https://api.github.com/users/mojombo/subscriptions",
+            organizationsUrl: "https://api.github.com/users/mojombo/orgs",
+            reposUrl: "https://api.github.com/users/mojombo/repos",
+            eventsUrl: "https://api.github.com/users/mojombo/events{/privacy}",
+            receivedEventsUrl: "https://api.github.com/users/mojombo/received_events",
+            type: "User",
+            siteAdmin: false,
+            isLiked: false
+        )
+        
+        let githubUser2 = GitHubUser(
+            login: "mojombo2",
+            id: 2,
+            nodeId: "MDQ6VXNlcjE=",
+            avatarUrl: "https://avatars.githubusercontent.com/u/1?v=4",
+            gravatarId: "",
+            url: "https://api.github.com/users/mojombo",
+            htmlUrl: "https://github.com/mojombo",
+            followersUrl: "https://api.github.com/users/mojombo/followers",
+            followingUrl: "https://api.github.com/users/mojombo/following{/other_user}",
+            gistsUrl: "https://api.github.com/users/mojombo/gists{/gist_id}",
+            starredUrl: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",
+            subscriptionsUrl: "https://api.github.com/users/mojombo/subscriptions",
+            organizationsUrl: "https://api.github.com/users/mojombo/orgs",
+            reposUrl: "https://api.github.com/users/mojombo/repos",
+            eventsUrl: "https://api.github.com/users/mojombo/events{/privacy}",
+            receivedEventsUrl: "https://api.github.com/users/mojombo/received_events",
+            type: "User",
+            siteAdmin: false,
+            isLiked: false
+        )
+        
+        allUser = [githubUser1, githubUser2]
+        
+        for _ in 0...30 {
+            github30people.append(allUser[0])
+        }
     }
 }

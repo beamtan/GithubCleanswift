@@ -25,7 +25,7 @@ protocol GithubDataStore {
 class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     
     var presenter: GithubPresentationLogic?
-    var worker: GithubWorker?
+    var worker: GithubWorkerProtocol?
     
     var allUser: [GitHubUser] = []
     var isLoadingData: Bool = false
@@ -36,7 +36,6 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     func interactorCallApi() {
         worker = GithubWorker()
         worker?.getGithubUserData() { [weak self] user, error  in
-            
             var response: Github.UserDetail.Response
             if let allUser = user {
                 self?.allUser = allUser
@@ -45,6 +44,7 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
                     isError: false,
                     errorMessage: ""
                 )
+
                 self?.presenter?.presentGithubUser(response: response)
             } else {
                 response = Github.UserDetail.Response(
@@ -66,6 +66,7 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
             
             currentPage += 1
             var maximumDisplayCurrentPage = currentPage * 10
+            print(currentPage * 10, maximumDisplayCurrentPage)
             
             if maximumDisplayCurrentPage >= totalUser {
                 maximumDisplayCurrentPage = totalUser
