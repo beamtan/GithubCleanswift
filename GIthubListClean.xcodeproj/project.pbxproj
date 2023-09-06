@@ -22,6 +22,8 @@
 		BBAC13ED2A9F1A9A0075EC8D /* GithubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E72A9F1A9A0075EC8D /* GithubViewController.swift */; };
 		BBAC13EE2A9F1A9A0075EC8D /* GithubInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13E82A9F1A9A0075EC8D /* GithubInteractor.swift */; };
 		BBAC13F12AA0F1A80075EC8D /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */; };
+		BBAC13F32AA733A50075EC8D /* GIthubMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = BBAC13F22AA733A50075EC8D /* GIthubMockData.json */; };
+		BBAC13F42AA736910075EC8D /* GIthubMockData.json in Resources */ = {isa = PBXBuildFile; fileRef = BBAC13F22AA733A50075EC8D /* GIthubMockData.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,7 @@
 		BBAC13E72A9F1A9A0075EC8D /* GithubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubViewController.swift; sourceTree = "<group>"; };
 		BBAC13E82A9F1A9A0075EC8D /* GithubInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubInteractor.swift; sourceTree = "<group>"; };
 		BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		BBAC13F22AA733A50075EC8D /* GIthubMockData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GIthubMockData.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,7 @@
 		BBAC13B22A9F1A030075EC8D /* GIthubListClean */ = {
 			isa = PBXGroup;
 			children = (
+				BBAC13F22AA733A50075EC8D /* GIthubMockData.json */,
 				BBAC13EF2A9F1AA90075EC8D /* Scene */,
 				BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */,
 				BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */,
@@ -259,6 +263,7 @@
 			files = (
 				BBAC13C02A9F1A060075EC8D /* LaunchScreen.storyboard in Resources */,
 				BBAC13BD2A9F1A060075EC8D /* Assets.xcassets in Resources */,
+				BBAC13F32AA733A50075EC8D /* GIthubMockData.json in Resources */,
 				BBAC13BB2A9F1A030075EC8D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBAC13F42AA736910075EC8D /* GIthubMockData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

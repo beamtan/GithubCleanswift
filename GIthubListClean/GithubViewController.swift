@@ -48,9 +48,11 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
         let interactor = GithubInteractor()
         let presenter = GithubPresenter()
         let router = GithubRouter()
+        let worker = GithubWorker()
         viewController.interactor = interactor
         viewController.router = router
         interactor.presenter = presenter
+        interactor.worker = worker
         presenter.viewController = viewController
         router.viewController = viewController
         router.dataStore = interactor

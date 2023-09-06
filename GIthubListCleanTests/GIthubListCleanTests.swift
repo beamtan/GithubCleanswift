@@ -79,7 +79,7 @@ final class GIthubListCleanTests: XCTestCase {
     func testInteractorGetMoreDataWithValidPage() {
         // Given
         interactor.currentPage = 1 // Set the current page
-        interactor.isLoadingData = false // Set isLoadingData to false
+        interactor.isLoadingData = false 
         interactor.allUser = self.mockData.github30people
 
         // When
@@ -125,24 +125,48 @@ final class GIthubListCleanTests: XCTestCase {
     func testInteractorCallApi() {
         // Create an expectation
         let expectation = self.expectation(description: "API call completed")
-        
-        // Create a mock worker that returns mock data immediately
-        worker.getGithubUserData { _, _ in
-            // Fulfill the expectation when the API call completes
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
             expectation.fulfill()
         }
-        
-        
+
         // Trigger the interactor method that makes the API call
+        worker.mockData = mockData.github30people
         interactor.interactorCallApi()
         
+
         // Wait for the expectation to be fulfilled or timeout after a certain duration
-        waitForExpectations(timeout: 3) { [self] error in
+        waitForExpectations(timeout: 2) { error in
             if let error = error {
                 XCTFail("Test timed out: \(error)")
             } else {
                 // Your assertions here
-                XCTAssertFalse(presenter.presentGithubUserCalled)
+                XCTAssertTrue(self.presenter.presentGithubUserCalled)
+            }
+        }
+    }
+    
+    func testInteractorCallApiError() {
+        // Create an expectation
+        let expectation = self.expectation(description: "API call Error")
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+            expectation.fulfill()
+        }
+        
+        let errorMessage1 = "The operation couldn’t be completed"
+        
+        let userInfo = [NSLocalizedDescriptionKey: "The operation couldn’t be completed"]
+        worker.mockError = NSError(domain: "MockErrorDomain", code: 123, userInfo: userInfo)
+        worker.mockData = nil
+        interactor.interactorCallApi()
+       
+        // Wait for the expectation to be fulfilled or timeout after a certain duration
+        waitForExpectations(timeout: 2) { error in
+            if let error = error {
+                XCTFail("Test timed out: \(error)")
+            } else {
+                XCTAssertTrue(self.presenter.presentErrorCalled)
             }
         }
     }
@@ -165,7 +189,7 @@ final class GIthubListCleanTests: XCTestCase {
         waitForExpectations(timeout: 3, handler: nil)
     }
     
-    func testGetGithubUserDataFailure() {
+    func testWorkerGetGithubUserDataFailure() {
         // Arrange
         let expectation = self.expectation(description: "API call completed")
         let mockError = NSError(domain: "MockErrorDomain", code: 123, userInfo: nil)
@@ -187,8 +211,8 @@ class MockGithubPresenter: GithubPresentationLogic {
     var presentGithubUserCalled = false
     var presentRefreshTableCalled = false
     var presentErrorCalled = false
-    var refreshTableViewModel: Github.UserIsLiked.ViewModel?
     
+    var refreshTableViewModel: Github.UserIsLiked.ViewModel?
     var presentGithubUserResponse: Github.UserDetail.Response?
     
     func presentGithubUser(response: GIthubListClean.Github.UserDetail.Response) {
@@ -220,54 +244,16 @@ class GitHubMockDataGenerator {
     var github30people: [GitHubUser] = []
     
     func setUpGitHubMockData() {
-        let githubUser1 = GitHubUser(
-            login: "mojombo",
-            id: 1,
-            nodeId: "MDQ6VXNlcjE=",
-            avatarUrl: "https://avatars.githubusercontent.com/u/1?v=4",
-            gravatarId: "",
-            url: "https://api.github.com/users/mojombo",
-            htmlUrl: "https://github.com/mojombo",
-            followersUrl: "https://api.github.com/users/mojombo/followers",
-            followingUrl: "https://api.github.com/users/mojombo/following{/other_user}",
-            gistsUrl: "https://api.github.com/users/mojombo/gists{/gist_id}",
-            starredUrl: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",
-            subscriptionsUrl: "https://api.github.com/users/mojombo/subscriptions",
-            organizationsUrl: "https://api.github.com/users/mojombo/orgs",
-            reposUrl: "https://api.github.com/users/mojombo/repos",
-            eventsUrl: "https://api.github.com/users/mojombo/events{/privacy}",
-            receivedEventsUrl: "https://api.github.com/users/mojombo/received_events",
-            type: "User",
-            siteAdmin: false,
-            isLiked: false
-        )
-        
-        let githubUser2 = GitHubUser(
-            login: "mojombo2",
-            id: 2,
-            nodeId: "MDQ6VXNlcjE=",
-            avatarUrl: "https://avatars.githubusercontent.com/u/1?v=4",
-            gravatarId: "",
-            url: "https://api.github.com/users/mojombo",
-            htmlUrl: "https://github.com/mojombo",
-            followersUrl: "https://api.github.com/users/mojombo/followers",
-            followingUrl: "https://api.github.com/users/mojombo/following{/other_user}",
-            gistsUrl: "https://api.github.com/users/mojombo/gists{/gist_id}",
-            starredUrl: "https://api.github.com/users/mojombo/starred{/owner}{/repo}",
-            subscriptionsUrl: "https://api.github.com/users/mojombo/subscriptions",
-            organizationsUrl: "https://api.github.com/users/mojombo/orgs",
-            reposUrl: "https://api.github.com/users/mojombo/repos",
-            eventsUrl: "https://api.github.com/users/mojombo/events{/privacy}",
-            receivedEventsUrl: "https://api.github.com/users/mojombo/received_events",
-            type: "User",
-            siteAdmin: false,
-            isLiked: false
-        )
-        
-        allUser = [githubUser1, githubUser2]
-        
-        for _ in 0...30 {
-            github30people.append(allUser[0])
+        if let jsonFileURL = Bundle(for: type(of: self)).url(forResource: "GIthubMockData", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: jsonFileURL)
+                allUser = try JSONDecoder().decode([GitHubUser].self, from: data)
+                github30people = Array(repeating: allUser[0], count: 31)
+            } catch {
+                print("Error loading or decoding JSON data: \(error)")
+            }
+        } else {
+            print("JSON file not found in the test bundle.")
         }
     }
 }

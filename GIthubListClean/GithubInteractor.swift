@@ -34,7 +34,6 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     // MARK: Do something
     
     func interactorCallApi() {
-        worker = GithubWorker()
         worker?.getGithubUserData() { [weak self] user, error  in
             var response: Github.UserDetail.Response
             if let allUser = user {
@@ -44,7 +43,6 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
                     isError: false,
                     errorMessage: ""
                 )
-
                 self?.presenter?.presentGithubUser(response: response)
             } else {
                 response = Github.UserDetail.Response(
@@ -52,6 +50,7 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
                     isError: true,
                     errorMessage: error!.localizedDescription
                 )
+                print("errorMessages!!!", response.errorMessage)
                 self?.presenter?.presentError(response: response)
             }
         }
@@ -88,6 +87,11 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
     
     func interactorLikeUser(request: Github.UserIsLiked.Request) {
         let row = request.updateAt
+//        if allUser.indices.contains(row) {
+//            allUser[row].isLiked = !allUser[row].isLiked
+//        } else {
+//            return
+//        }
         allUser[row].isLiked = !allUser[row].isLiked
         let response = Github.UserIsLiked.Response(
             updateAt: row
