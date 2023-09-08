@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB2BF4DC2AAB277A00FF2952 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2BF4DB2AAB277A00FF2952 /* ViewController.swift */; };
+		BB2BF4DE2AAB28AB00FF2952 /* Second.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB2BF4DD2AAB28AB00FF2952 /* Second.storyboard */; };
 		BBAC13B42A9F1A030075EC8D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */; };
 		BBAC13B62A9F1A030075EC8D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */; };
 		BBAC13BB2A9F1A030075EC8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBAC13B92A9F1A030075EC8D /* Main.storyboard */; };
@@ -44,6 +46,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BB2BF4DB2AAB277A00FF2952 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BB2BF4DD2AAB28AB00FF2952 /* Second.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Second.storyboard; sourceTree = "<group>"; };
 		BBAC13B02A9F1A030075EC8D /* GIthubListClean.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GIthubListClean.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBAC13B32A9F1A030075EC8D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBAC13B52A9F1A030075EC8D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 				BBAC13BE2A9F1A060075EC8D /* LaunchScreen.storyboard */,
 				BBAC13C12A9F1A060075EC8D /* Info.plist */,
 				BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */,
+				BB2BF4DB2AAB277A00FF2952 /* ViewController.swift */,
+				BB2BF4DD2AAB28AB00FF2952 /* Second.storyboard */,
 			);
 			path = GIthubListClean;
 			sourceTree = "<group>";
@@ -264,6 +270,7 @@
 				BBAC13C02A9F1A060075EC8D /* LaunchScreen.storyboard in Resources */,
 				BBAC13BD2A9F1A060075EC8D /* Assets.xcassets in Resources */,
 				BBAC13F32AA733A50075EC8D /* GIthubMockData.json in Resources */,
+				BB2BF4DE2AAB28AB00FF2952 /* Second.storyboard in Resources */,
 				BBAC13BB2A9F1A030075EC8D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB2BF4DC2AAB277A00FF2952 /* ViewController.swift in Sources */,
 				BBAC13EC2A9F1A9A0075EC8D /* GithubModels.swift in Sources */,
 				BBAC13EB2A9F1A9A0075EC8D /* GithubRouter.swift in Sources */,
 				BBAC13B42A9F1A030075EC8D /* AppDelegate.swift in Sources */,
@@ -404,7 +412,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -458,7 +466,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

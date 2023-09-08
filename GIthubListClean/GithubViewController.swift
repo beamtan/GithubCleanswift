@@ -29,6 +29,9 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
     private var currentPage = 1
     private var isLoadingData = false
     
+    let defaults = UserDefaults.standard
+    let likeUserIDForUserDefault = "LikedUserIDs"
+    
     // MARK: Object lifecycle
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -58,7 +61,7 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
         router.dataStore = interactor
     }
     
-    // MARK: Routing
+    // MARK: - Routing
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let scene = segue.identifier {
@@ -69,13 +72,23 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
         }
     }
     
-    // MARK: View lifecycle
+    // MARK: - View lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         table.dataSource = self
         table.delegate = self
         initFetchGithubData()
+        
+        if let idArray = defaults.stringArray(forKey: likeUserIDForUserDefault) {
+//            for id in idArray {
+//                print("ID: \(id)")
+//            }
+            print(idArray)
+        } else {
+            print("User default arrat not found")
+        }
+        
     }
     
     // MARK: To Interactor
@@ -89,8 +102,8 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
         interactor?.interactorGetMoreData()
     }
     
-    // MARK: From Presenter
-    
+// MARK: - From Presenter
+
     func displayGithubUser(viewModel: Github.UserDetail.ViewModel) {
         githubUser = viewModel.githubUser ?? []
         DispatchQueue.main.async {
@@ -125,12 +138,12 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
     
     func likeButtonTapped(forCell cell: CustomTableViewCell) {
         if let indexPath = table.indexPath(for: cell) {
-            githubUser[indexPath.row].isLiked = !githubUser[indexPath.row].isLiked
             
             let request = Github.UserIsLiked.Request(
-                updateAt: indexPath.row
+                updateAt: indexPath.row,
+                reaction: githubUser[indexPath.row].isLiked ? .unlike : .like
             )
-            
+            githubUser[indexPath.row].isLiked = !githubUser[indexPath.row].isLiked
             interactor?.interactorLikeUser(request: request)
         }
     }
@@ -171,7 +184,7 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
     private func setUpTableUI(cell: CustomTableViewCell, githubUser: GitHubUser) {
         cell.label.text = githubUser.login
         cell.likeButton.setTitle("", for: .normal)
-        cell.likeButton.frame.size = CGSize(width: 20, height: 20)
+//        cell.likeButton.frame.size = CGSize(width: 50, height: 50)
         cell.githubURL.text = githubUser.url
         cell.delegate = self
         
@@ -180,6 +193,7 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
         }
         
         let imageSize = CGSize(width: 20, height: 20)
+        
         if githubUser.isLiked {
             let likedImage = UIImage(named: "likedButton")?.resize(targetSize: imageSize)
             cell.likeButton.setImage(likedImage, for: .normal)
@@ -187,6 +201,10 @@ extension GithubViewController: UITableViewDataSource, UITableViewDelegate, Cust
             let likeImage = UIImage(named: "likeButton")?.resize(targetSize: imageSize)
             cell.likeButton.setImage(likeImage, for: .normal)
         }
+        
+        let padding: CGFloat = 20.0
+        cell.likeButton.imageEdgeInsets = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -249,4 +267,3 @@ extension UIImage {
         return newImage ?? UIImage()
     }
 }
-

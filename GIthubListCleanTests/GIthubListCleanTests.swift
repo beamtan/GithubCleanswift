@@ -79,7 +79,7 @@ final class GIthubListCleanTests: XCTestCase {
     func testInteractorGetMoreDataWithValidPage() {
         // Given
         interactor.currentPage = 1 // Set the current page
-        interactor.isLoadingData = false 
+        interactor.isLoadingData = false
         interactor.allUser = self.mockData.github30people
 
         // When

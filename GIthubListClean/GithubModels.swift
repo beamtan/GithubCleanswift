@@ -40,6 +40,7 @@ enum Github {
     enum UserIsLiked {
         struct Request {
             let updateAt: Int
+            let reaction: Reaction
         }
         struct Response {
             let updateAt: Int
@@ -49,12 +50,18 @@ enum Github {
         }
     }
     
+    enum Reaction {
+        case like, unlike
+    }
+    
 }
+
+// MARK: - Users
 
 struct GitHubUser: Codable {
     var login: String?
     var id: Int?
-    var nodeId: String?
+    var nodeID: String?
     var avatarUrl: String?
     var gravatarId: String?
     var url: String?
@@ -76,5 +83,6 @@ struct GitHubUser: Codable {
         case login = "login"
         case avatarUrl = "avatar_url"
         case url = "url"
+        case nodeID = "node_id"
     }
 }
