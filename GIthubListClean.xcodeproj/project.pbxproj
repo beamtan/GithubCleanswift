@@ -160,13 +160,13 @@
 			isa = PBXGroup;
 			children = (
 				BBAC13F02AA0F1A80075EC8D /* CustomTableViewCell.swift */,
-				F5D97C732AB1A58A00E84D92 /* Github.storyboard */,
 				BBAC13E32A9F1A9A0075EC8D /* GithubPresenter.swift */,
 				BBAC13E42A9F1A9A0075EC8D /* GithubWorker.swift */,
 				BBAC13E52A9F1A9A0075EC8D /* GithubRouter.swift */,
 				BBAC13E62A9F1A9A0075EC8D /* GithubModels.swift */,
 				BBAC13E72A9F1A9A0075EC8D /* GithubViewController.swift */,
 				BBAC13E82A9F1A9A0075EC8D /* GithubInteractor.swift */,
+				F5D97C732AB1A58A00E84D92 /* Github.storyboard */,
 			);
 			path = Github;
 			sourceTree = "<group>";

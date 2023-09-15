@@ -42,6 +42,7 @@ class GithubInteractor: GithubBusinessLogic, GithubDataStore {
             if let allUser = user {
                 
                 self?.allUser = allUser
+                print("Total user: \(allUser.count)")
 
                 let listOfLikedUsers = self!.defaults.stringArray(forKey: self!.likeUserIDForUserDefault) ?? []
                 for user in 0...allUser.count - 1 {
