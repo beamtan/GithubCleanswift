@@ -8,19 +8,34 @@
 import Foundation
 import UIKit
 
-//push
-//let loginVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-//self.present(loginVC, animated: true, completion: nil)
-
-
-//present
-//let loginVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-//self.navigationController?.pushViewController(loginVC, animated: true)
-
-class MainViewController: UIViewController {
+class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("hello world")
+    }
+    
+    @IBAction func changeScene(_ sender: UIButton) {
+//        presentView()
+        pushView()
+    }
+    
+    func presentView() {
+        let storyboard = UIStoryboard(name: "Github", bundle: nil)
+        let myViewController = storyboard.instantiateViewController(withIdentifier: "GithubViewController")
+        let myNavigationController = UINavigationController(rootViewController: myViewController)
+        myNavigationController.modalTransitionStyle = .crossDissolve
+        myNavigationController.modalPresentationStyle = .overFullScreen
+        self.present(myNavigationController, animated: true) {
+        }
+    }
+    
+    func pushView() {
+        let storyboard = UIStoryboard(name: "Github", bundle: nil)
+        if let githubViewController = storyboard.instantiateViewController(withIdentifier: "GithubViewController") as? GithubViewController {
+            self.navigationController?.pushViewController(githubViewController, animated: true)
+        } else {
+            // Handle the case where the view controller couldn't be instantiated
+            print("Failed to instantiate GithubViewController from storyboard")
+        }
     }
 }

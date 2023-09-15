@@ -76,9 +76,11 @@ class GithubViewController: UIViewController, GithubDisplayLogic {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isLoadingData = true
         table.dataSource = self
         table.delegate = self
         initFetchGithubData()
+        isLoadingData = false
         
         if let idArray = defaults.stringArray(forKey: likeUserIDForUserDefault) {
 //            for id in idArray {

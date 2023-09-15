@@ -9,11 +9,26 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+//        self.window = UIWindow(frame: UIScreen.main.bounds)
+//
+//        // Create an instance of your ViewController (assuming it's the initial view controller)
+//        let viewControllerStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//        let viewController = viewControllerStoryboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
+//
+//        // Create a UINavigationController with ViewController as its root view controller
+//        let navigationController = UINavigationController(rootViewController: viewController)
+//
+//        // Set the navigation controller as the root view controller of the window
+//        self.window!.rootViewController = navigationController
+//        self.window?.makeKeyAndVisible()
+        
         return true
     }
+
 
     // MARK: UISceneSession Lifecycle
 
